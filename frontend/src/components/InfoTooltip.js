@@ -15,7 +15,7 @@ export default function InfoTooltip({ open, onClose, message, type }) {
             className="popup__icon"
             alt="Message"
           />
-          <p class="popup__message">{message}</p>
+          <p className="popup__message">{message}</p>
         </div>
       </Popup>
     </>

@@ -121,6 +121,7 @@ function App() {
   React.useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
+      api.setToken(token);
       getUserInfo(token);
     }else{
       history.push('/login')
@@ -132,6 +133,7 @@ function App() {
       .login(email, password)
       .then(({ token, message }) => {
         if (token) {
+          api.setToken(token);
           localStorage.setItem("token", token);
           getUserInfo(token);          
         } else {

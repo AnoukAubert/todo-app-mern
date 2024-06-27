@@ -14,7 +14,7 @@ class Auth {
     }
   
     login(email, password) {
-      return fetch(`https://register.nomoreparties.co/signin`, {
+      return fetch(`${this._url}/signin`, {
         method: 'POST',
         headers: {
           "Content-Type": "application/json",
@@ -24,7 +24,7 @@ class Auth {
     }
 
     register(email, password) {
-      return fetch(`https://register.nomoreparties.co/signup`, {
+      return fetch(`${this._url}/signup`, {
         method: 'POST',
         headers: {
           "Content-Type": "application/json",
@@ -34,8 +34,11 @@ class Auth {
     }
   }
   
+  // const auth = new Auth(
+  //   "https://register.nomoreparties.co"
+  // );
   const auth = new Auth(
-    "https://register.nomoreparties.co"
+    "http://localhost:3001"
   );
   
   export default auth;

@@ -2,8 +2,10 @@ const express = require('express');
 const cardsRouter = require('./routes/cards');
 const usersRouter = require('./routes/users');
 const authRouter = require('./routes/auth');
-const authMiddleware = require('./middleware/auth');
+const authMiddleware = require('./middlewares/auth');
 const mongoose = require('mongoose');
+const cors = require('cors');
+const { errors } = require('celebrate')
 
 const { PORT = 3001 } = process.env;
 const app = express();
@@ -19,16 +21,19 @@ const HttpResponseMessage = {
   }
 }
 
-app.use(authRouter);
-
 mongoose.connect('mongodb://localhost:27017/mynewdb');
 
+app.use(cors());
+app.options('*', cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.use(authMiddleware);
+app.use(authRouter);
+
+app.use(authMiddleware); //lo esta tomando?
 app.use(cardsRouter);
 app.use(usersRouter);
+app.use(errors());
 
 app.use('/', (req, res) => {
   return res.status(HttpStatus.NOT_FOUND).send(HttpResponseMessage.NOT_FOUND);
@@ -37,7 +42,3 @@ app.use('/', (req, res) => {
 app.listen(PORT, () => {
   console.log(`La aplicación está detectando el puerto ${PORT}`);
 });
-
-module.exports.createCard = (req, res) => {
-  console.log(req.user._id);
-};

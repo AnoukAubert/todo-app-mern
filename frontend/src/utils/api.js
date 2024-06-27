@@ -4,10 +4,14 @@ class Api {
     this._token = token;
   }
 
+  setToken(token) {
+    this._token = `Bearer ${token}`;
+  }
+
   getUserInfo() {
     return fetch(`${this._url}/users/me`, {
       headers: {
-        authorization: "f80df4b9-cf83-4a10-a5c8-b4a26c62594d",
+        authorization: this._token,
         "Content-Type": "application/json",
       },
     }).then((response) => response.json());
@@ -16,7 +20,7 @@ class Api {
   updateUser(name, about) {
     return fetch(`${this._url}/users/me`, {
       headers: {
-        authorization: "f80df4b9-cf83-4a10-a5c8-b4a26c62594d",
+        authorization: this._token,
         "Content-Type": "application/json",
       },
       method: "PATCH",
@@ -30,7 +34,7 @@ class Api {
   updateAvatar(avatar) {
     return fetch(`${this._url}/users/me/avatar`, {
       headers: {
-        authorization: "f80df4b9-cf83-4a10-a5c8-b4a26c62594d",
+        authorization: this._token,
         "Content-Type": "application/json",
       },
       method: "PATCH",
@@ -43,7 +47,7 @@ class Api {
   getCards() {
     return fetch(`${this._url}/cards`, {
       headers: {
-        authorization: "f80df4b9-cf83-4a10-a5c8-b4a26c62594d",
+        authorization: this._token,
         "Content-Type": "application/json",
       },
     }).then((response) => response.json());
@@ -52,7 +56,7 @@ class Api {
   insertCard(link, name) {
     return fetch(`${this._url}/cards`, {
       headers: {
-        authorization: "f80df4b9-cf83-4a10-a5c8-b4a26c62594d",
+        authorization: this._token,
         "Content-Type": "application/json",
       },
       method: "POST",
@@ -66,7 +70,7 @@ class Api {
   deleteCard(cardId) {
     return fetch(`${this._url}/cards/${cardId}`, {
       headers: {
-        authorization: "f80df4b9-cf83-4a10-a5c8-b4a26c62594d",
+        authorization: this._token,
         "Content-Type": "application/json",
       },
       method: "DELETE",
@@ -76,7 +80,7 @@ class Api {
   addLike(cardId) {
     return fetch(`${this._url}/cards/likes/${cardId}`, {
       headers: {
-        authorization: "f80df4b9-cf83-4a10-a5c8-b4a26c62594d",
+        authorization: this._token,
         "Content-Type": "application/json",
       },
       method: "PUT",
@@ -86,7 +90,7 @@ class Api {
   removeLike(cardId) {
     return fetch(`${this._url}/cards/likes/${cardId}`, {
       headers: {
-        authorization: "f80df4b9-cf83-4a10-a5c8-b4a26c62594d",
+        authorization: this._token,
         "Content-Type": "application/json",
       },
       method: "DELETE",
@@ -94,8 +98,12 @@ class Api {
   }
 }
 
+// const api = new Api(
+//   "https://around.nomoreparties.co/v1/web_es_11/",
+//   "f80df4b9-cf83-4a10-a5c8-b4a26c62594d"
+// );
 const api = new Api(
-  "https://around.nomoreparties.co/v1/web_es_11/",
+  "http://localhost:3001",
   "f80df4b9-cf83-4a10-a5c8-b4a26c62594d"
 );
 

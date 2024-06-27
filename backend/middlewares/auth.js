@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken');
+require('dotenv').config();
 
 module.exports = (req, res, next) => {
   const { authorization } = req.headers;
@@ -13,14 +14,14 @@ module.exports = (req, res, next) => {
   let payload;
 
   try {
-    payload = jwt.verify(token, 'some-secret-key');
+    payload = jwt.verify(token, process.env.SECRET_KEY);
   } catch (err) {
     return res
       .status(401)
       .send({ message: 'Se requiere autorización' });
   }
 
-  req.user = payload; // asigna el payload al objeto de solicitud
+  req.user = payload;
 
-  next(); // envía la solicitud al siguiente middleware
+  next();
 };
