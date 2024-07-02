@@ -60,6 +60,12 @@ const updateAvatar = (req, res) => {
   }).catch(error => handleErrors(error, res));
 };
 
+app.get('/crash-test', () => {
+  setTimeout(() => {
+  throw new Error('El servidor va a caer');
+  }, 0);
+});
+
 const login = (req, res) => {
   const { email, password } = req.body;
 

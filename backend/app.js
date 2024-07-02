@@ -5,7 +5,7 @@ const authRouter = require('./routes/auth');
 const authMiddleware = require('./middlewares/auth');
 const mongoose = require('mongoose');
 const cors = require('cors');
-const { errors } = require('celebrate')
+const { errors } = require('celebrate');
 
 const { PORT = 3001 } = process.env;
 const app = express();
@@ -30,7 +30,7 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use(authRouter);
 
-app.use(authMiddleware); //lo esta tomando?
+app.use(authMiddleware);
 app.use(cardsRouter);
 app.use(usersRouter);
 app.use(errors());
