@@ -1,27 +1,14 @@
 const jwt = require('jsonwebtoken');
-require('dotenv').config();
 
 module.exports = (req, res, next) => {
-  const { authorization } = req.headers;
-
-  if (!authorization || !authorization.startsWith('Bearer ')) {
-    return res
-      .status(401)
-      .send({ message: 'Se requiere autorización' });
-  }
-
-  const token = authorization.replace('Bearer ', '');
-  let payload;
+  const token = req.headers.authorization?.split(' ')[1];
+  if (!token) return res.status(401).json({ message: 'Token faltante' });
 
   try {
-    payload = jwt.verify(token, process.env.SECRET_KEY);
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    req.user = decoded; 
+    next();
   } catch (err) {
-    return res
-      .status(401)
-      .send({ message: 'Se requiere autorización' });
+    res.status(403).json({ message: 'Token inválido o expirado' });
   }
-
-  req.user = payload;
-
-  next();
 };

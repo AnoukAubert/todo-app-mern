@@ -1,50 +1,20 @@
+require('dotenv').config();
 const express = require('express');
-const cardsRouter = require('./routes/cards');
-const usersRouter = require('./routes/users');
-const authRouter = require('./routes/auth');
-const authMiddleware = require('./middlewares/auth');
 const mongoose = require('mongoose');
 const cors = require('cors');
-const { errors } = require('celebrate');
+const authRoutes = require('./routes/auth');
+const taskRoutes = require('./routes/tasks');
 
-const { PORT = 3001 } = process.env;
 const app = express();
-
-const HttpStatus = {
-  NOT_FOUND:  404
-}
-
-const HttpResponseMessage = {
-  NOT_FOUND: {
-    status: false,
-    message: 'NOT FOUND'
-  }
-}
-
-mongoose.connect('mongodb://localhost:27017/mynewdb');
-
 app.use(cors());
-app.options('*', cors());
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
 
-app.get('/crash-test', () => {
-  setTimeout(() => {
-  throw new Error('El servidor va a caer');
-  }, 0);
-});
+mongoose.connect(process.env.MONGO_URI)
+  .then(() => console.log('Conectado a MongoDB'))
+  .catch(err => console.error('Error conectando a MongoDB:', err));
 
-app.use(authRouter);
+app.use('/api', authRoutes);
+app.use('/api/tasks', taskRoutes);
 
-app.use(authMiddleware);
-app.use(cardsRouter);
-app.use(usersRouter);
-app.use(errors());
-
-app.use('/', (req, res) => {
-  return res.status(HttpStatus.NOT_FOUND).send(HttpResponseMessage.NOT_FOUND);
-})
-
-app.listen(PORT, () => {
-  console.log(`La aplicación está detectando el puerto ${PORT}`);
-});
+const PORT = process.env.PORT || 3001;
+app.listen(PORT, () => console.log(`Servidor en puerto ${PORT}`));
