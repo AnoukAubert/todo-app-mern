@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { Routes, Route, Navigate, useNavigate } from "react-router-dom";
-import Register from "./components/Register";
-import Login from "./components/Login";
-import TaskDashboard from "./components/TaskDashboard";
-import ProtectedRoute from "./components/ProtectedRoute";
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import Register from "../components/Register";
+import Login from "../components/Login";
+import TaskDashboard from "../components/TaskDashboard";
+import ProtectedRoute from "../components/ProtectedRoute";
 
 function App() {
   const [loggedIn, setLoggedIn] = useState(false);
@@ -57,6 +59,8 @@ function App() {
           element={<Navigate to={loggedIn ? "/tasks" : "/signin"} />}
         />
       </Routes>
+
+      <ToastContainer position="top-right" autoClose={3000} />
     </>
   );
 }

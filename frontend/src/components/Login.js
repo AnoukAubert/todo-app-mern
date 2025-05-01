@@ -14,8 +14,8 @@ function Login({ onLogin }) {
     })
       .then(async (res) => {
         if (!res.ok) {
-          const err = await res.json();
-          throw new Error(err.message || 'Login fallido');
+          const err = await res.text();
+          throw new Error(err || 'Login fallido');
         }
         return res.json();
       })

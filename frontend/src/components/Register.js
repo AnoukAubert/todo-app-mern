@@ -9,13 +9,14 @@ function Register({ onLogin }) {
     e.preventDefault();
     fetch('/api/signup', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+      },
       body: JSON.stringify({ email, password }),
     })
-      .then(async (res) => {
+      .then((res) => {
         if (!res.ok) {
-          const err = await res.json();
-          throw new Error(err.message || 'Error al registrarse');
+          throw new Error('Registro fallido');
         }
         return res.json();
       })
