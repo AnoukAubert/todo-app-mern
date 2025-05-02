@@ -10,13 +10,16 @@ function TaskDashboard() {
   const navigate = useNavigate();
   const token = localStorage.getItem('jwt');
 
+  // Cambiá esto en producción si desplegás backend en Render:
+  const API_BASE = '/api'; // o 'https://tu-api.onrender.com/api'
+
   useEffect(() => {
     if (!token) {
       navigate('/signin');
       return;
     }
-  
-    fetch('/api/tasks', {
+
+    fetch(`${API_BASE}/tasks`, {
       headers: {
         Authorization: `Bearer ${token}`,
       }
@@ -30,16 +33,17 @@ function TaskDashboard() {
         }
         return res.json();
       })
-      .then(data => setTasks(data))
-      .catch(err => {
-        toast.error(`Error al cargar tareas: ${err.message}`);
-      });
+      .then(setTasks)
+      .catch(err => toast.error(`Error al cargar tareas: ${err.message}`));
   }, [navigate, token]);
 
   const handleSubmitTask = (taskData) => {
-    const url = editingTask ? `/api/tasks/${editingTask._id}` : '/api/tasks';
-    const method = editingTask ? 'PATCH' : 'POST';
-  
+    const isEdit = Boolean(editingTask);
+    const url = isEdit
+      ? `${API_BASE}/tasks/${editingTask._id}`
+      : `${API_BASE}/tasks`;
+    const method = isEdit ? 'PATCH' : 'POST';
+
     fetch(url, {
       method,
       headers: {
@@ -56,24 +60,23 @@ function TaskDashboard() {
         return res.json();
       })
       .then((newTask) => {
-        if (editingTask) {
-          setTasks(prev =>
-            prev.map(t => (t._id === newTask._id ? newTask : t))
-          );
-          toast.success('Tarea actualizada con éxito');
-        } else {
-          setTasks(prev => [...prev, newTask]);
-          toast.success('Tarea creada con éxito');
-        }
+        setTasks((prev) =>
+          isEdit
+            ? prev.map((t) => (t._id === newTask._id ? newTask : t))
+            : [...prev, newTask]
+        );
+        toast.success(`Tarea ${isEdit ? 'actualizada' : 'creada'} con éxito`);
         setEditingTask(null);
       })
-      .catch(err => {
-        toast.error(`Error: ${err.message}`);
-      });
+      .catch(err => toast.error(`Error: ${err.message}`));
   };
 
   const handleDeleteTask = (taskId) => {
-    fetch(`/api/tasks/${taskId}`, {
+    if (!window.confirm("¿Estás segura de que querés eliminar esta tarea?")) {
+      return;
+    }
+
+    fetch(`${API_BASE}/tasks/${taskId}`, {
       method: 'DELETE',
       headers: {
         Authorization: `Bearer ${token}`,
@@ -84,12 +87,10 @@ function TaskDashboard() {
           const err = await res.text();
           throw new Error(err || 'Error al eliminar tarea');
         }
-        setTasks(prev => prev.filter(t => t._id !== taskId));
-    toast.success('Tarea eliminada');
-  })
-  .catch(err => {
-    toast.error(`Error al eliminar tarea: ${err.message}`);
-      });
+        setTasks((prev) => prev.filter((t) => t._id !== taskId));
+        toast.success('Tarea eliminada');
+      })
+      .catch(err => toast.error(`Error al eliminar tarea: ${err.message}`));
   };
 
   const handleEditTask = (task) => {

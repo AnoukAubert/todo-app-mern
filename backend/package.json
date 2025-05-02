@@ -23,7 +23,7 @@
     "eslint": "^8.2.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-plugin-import": "^2.29.1",
-    "nodemon": "^3.1.0"
+    "nodemon": "^3.1.10"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
@@ -31,7 +31,9 @@
     "cors": "^2.8.5",
     "dotenv": "^16.5.0",
     "express": "^4.21.2",
+    "express-rate-limit": "^7.5.0",
     "jsonwebtoken": "^9.0.2",
-    "mongoose": "^8.14.1"
+    "mongoose": "^8.14.1",
+    "morgan": "^1.10.0"
   }
 }

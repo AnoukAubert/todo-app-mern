@@ -13,17 +13,13 @@ function App() {
 
   useEffect(() => {
     const token = localStorage.getItem('jwt');
-    if (token && token.length > 10) { 
-      setLoggedIn(true);
-    } else {
-      setLoggedIn(false);
-    }
+    if (token) setLoggedIn(true);
   }, []);
-
+  
   const handleLogin = (token) => {
-    localStorage.setItem("jwt", token);
+    localStorage.setItem('jwt', token);
     setLoggedIn(true);
-    navigate("/tasks");
+    navigate('/tasks');
   };
 
   const handleLogout = () => {
