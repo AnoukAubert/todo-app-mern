@@ -2,6 +2,12 @@
 
 Aplicación full stack MERN para la gestión de tareas con autenticación, validaciones, rate-limiting y animaciones.
 
+## Enlaces
+
+- **Frontend:** https://todo-app-mern-mocha.vercel.app
+- **Backend:** https://todo-app-mern-vvpk.onrender.com
+- **GitHub:** https://github.com/AnoukAubert/todo-app-mern
+
 ## 🧩 Tecnologías utilizadas
 
 - **Frontend:** React, React Router, TailwindCSS, React Toastify, Framer Motion
