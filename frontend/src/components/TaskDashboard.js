@@ -11,7 +11,7 @@ function TaskDashboard() {
   const token = localStorage.getItem('jwt');
 
   // Cambiá esto en producción si desplegás backend en Render:
-  const API_BASE = '/api'; // o 'https://tu-api.onrender.com/api'
+  const API_BASE = 'https://todo-api.onrender.com/api'; // o 'https://tu-api.onrender.com/api'
 
   useEffect(() => {
     if (!token) {
