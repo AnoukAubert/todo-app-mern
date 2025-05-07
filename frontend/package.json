@@ -21,7 +21,7 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
-  "proxy": "http://localhost:5000",  
+  "proxy": "hhttps://todo-app-mern-vvpk.onrender.com/api/endpoint",  
   "eslintConfig": {
     "extends": [
       "react-app",

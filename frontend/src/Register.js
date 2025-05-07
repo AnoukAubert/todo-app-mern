@@ -7,7 +7,7 @@ function Register({ onLogin }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    fetch("http://localhost:5000/api/signup", {
+    fetch("hhttps://todo-app-mern-vvpk.onrender.com/api/endpoint/api/signup", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email, password }),
