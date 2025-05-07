@@ -116,8 +116,3 @@ npm start
 ❓ ¿Dudas o problemas?
 
 Si encontrás algún problema o querés mejorar algo, ¡abrí un issue en el repositorio o contactame!
-
-
----
-
-### ✅ ¿Qué te parece este README? ¿Modificarías algo? 🙂
