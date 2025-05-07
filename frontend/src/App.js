@@ -2,10 +2,10 @@ import React, { useState, useEffect } from "react";
 import { Routes, Route, Navigate, useNavigate } from "react-router-dom";
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import Register from "../components/Register";
-import Login from "../components/Login";
-import TaskDashboard from "../components/TaskDashboard";
-import ProtectedRoute from "../components/ProtectedRoute";
+import Register from "./Register";
+import Login from "./Login";
+import TaskDashboard from "./TaskDashboard";
+import ProtectedRoute from "./ProtectedRoute";
 
 function App() {
   const [loggedIn, setLoggedIn] = useState(false);
@@ -30,7 +30,7 @@ function App() {
 
   return (
     <>
-      <header className="bg-blue-600 text-white py-4 px-6 flex justify-between">
+      <header className="bg-violet-900 text-white py-4 px-6 flex justify-between">
         <h1 className="text-xl font-semibold">ToDo App</h1>
         {loggedIn && (
           <button onClick={handleLogout} className="hover:underline">

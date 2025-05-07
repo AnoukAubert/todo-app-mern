@@ -1,16 +1,16 @@
-import React from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import React from "react";
+import { motion, AnimatePresence } from "framer-motion";
 
 function TaskList({ tasks, onEdit, onDelete }) {
   return (
     <ul className="mt-4 space-y-4">
       <AnimatePresence>
-        {tasks.map(task => (
+        {tasks.map((task) => (
           <motion.li
             key={task._id}
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, x: -100 }}
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: 20 }}
             transition={{ duration: 0.3 }}
             className="bg-white shadow-md rounded-lg p-4 flex justify-between items-start"
           >
@@ -21,7 +21,7 @@ function TaskList({ tasks, onEdit, onDelete }) {
             <div className="flex flex-col gap-2">
               <button
                 onClick={() => onEdit(task)}
-                className="text-blue-600 hover:underline"
+                className="text-violet-900 hover:underline"
               >
                 Editar
               </button>
