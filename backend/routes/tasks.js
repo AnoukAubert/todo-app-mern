@@ -9,7 +9,7 @@ const {
   updateTask,
   deleteTask,
 // eslint-disable-next-line import/no-unresolved, import/extensions
-} = require('../controllers/tasks');
+} = require('../controllers/taskController');
 
 router.get('/', authMiddleware, getTasks);
 router.post('/', authMiddleware, createTask);
