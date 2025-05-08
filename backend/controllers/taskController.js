@@ -1,4 +1,4 @@
-const Task = require('../models/taskModel');
+const Task = require('../models/Task');
 
 const getTasks = async (req, res) => {
   try {
@@ -28,7 +28,7 @@ const updateTask = async (req, res) => {
     const task = await Task.findByIdAndUpdate(
       id,
       { title, description },
-      { new: true }
+      { new: true },
     );
 
     if (!task) {
