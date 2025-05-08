@@ -1,47 +1,28 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 
-function TaskForm({ onSubmit, initialData }) {
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
-
-  useEffect(() => {
-    if (initialData) {
-      setTitle(initialData.title);
-      setDescription(initialData.description);
-    } else {
-      setTitle("");
-      setDescription("");
-    }
-  }, [initialData]);
+function TaskForm({ onCreate }) {
+  const [newTask, setNewTask] = useState("");
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!title.trim()) return;
-    onSubmit({ title, description });
-    setTitle("");
-    setDescription("");
+    onCreate(newTask);
+    setNewTask("");
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4 bg-white p-4 rounded-md shadow-md">
+    <form onSubmit={handleSubmit} className="flex mb-4 space-x-2">
       <input
         type="text"
-        value={title}
-        onChange={(e) => setTitle(e.target.value)}
-        placeholder="Título de la tarea"
-        className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring focus:ring-violet-600"
-        required
-      />
-      <textarea
-        value={description}
-        onChange={(e) => setDescription(e.target.value)}
-        placeholder="Descripción (opcional)"
-        className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring focus:ring-violet-600"
+        value={newTask}
+        onChange={(e) => setNewTask(e.target.value)}
+        placeholder="Nueva tarea"
+        className="flex-1 px-3 py-2 border rounded"
       />
       <button
         type="submit"
-        className="w-full py-2 bg-violet-900 text-white rounded hover:bg-violet-950 transition">
-        {initialData ? "Actualizar Tarea" : "Crear Tarea"}
+        className="bg-violet-900 text-white py-2 px-4 rounded hover:bg-violet-950"
+      >
+        Agregar
       </button>
     </form>
   );

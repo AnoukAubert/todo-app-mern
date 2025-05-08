@@ -1,41 +1,38 @@
 import React from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
-function TaskList({ tasks, onEdit, onDelete }) {
+function TaskList({ tasks, onToggle, onDelete }) {
   return (
-    <ul className="mt-4 space-y-4">
-      <AnimatePresence>
-        {tasks.map((task) => (
-          <motion.li
+    <AnimatePresence>
+      {tasks.length ? (
+        tasks.map((task) => (
+          <motion.div
             key={task._id}
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: 20 }}
-            transition={{ duration: 0.3 }}
-            className="bg-white shadow-md rounded-lg p-4 flex justify-between items-start"
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 10 }}
+            className="flex items-center justify-between mb-2 p-2 border rounded"
           >
-            <div>
-              <h3 className="text-lg font-semibold text-gray-800">{task.title}</h3>
-              <p className="text-gray-600">{task.description}</p>
-            </div>
-            <div className="flex flex-col gap-2">
-              <button
-                onClick={() => onEdit(task)}
-                className="text-violet-900 hover:underline"
-              >
-                Editar
-              </button>
-              <button
-                onClick={() => onDelete(task._id)}
-                className="text-red-600 hover:underline"
-              >
-                Eliminar
-              </button>
-            </div>
-          </motion.li>
-        ))}
-      </AnimatePresence>
-    </ul>
+            <span
+              className={`flex-1 cursor-pointer ${
+                task.completed ? "line-through text-gray-500" : ""
+              }`}
+              onClick={() => onToggle(task)}
+            >
+              {task.title}
+            </span>
+            <button
+              onClick={() => onDelete(task._id)}
+              className="text-red-500 hover:text-red-700"
+            >
+              Eliminar
+            </button>
+          </motion.div>
+        ))
+      ) : (
+        <p className="text-gray-500 text-center mt-4">No hay tareas aún.</p>
+      )}
+    </AnimatePresence>
   );
 }
 

@@ -21,7 +21,7 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
-  "proxy": "hhttps://todo-app-mern-vvpk.onrender.com/api/endpoint",  
+  "proxy": "https://todo-app-mern-vvpk.onrender.com/api/endpoint",  
   "eslintConfig": {
     "extends": [
       "react-app",

@@ -1,92 +1,71 @@
-import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
-import TaskForm from "./TaskForm";
+import React, { useState, useEffect } from "react";
+import { getTasks, createTask, updateTask, deleteTask } from "./api";
 import TaskList from "./TaskList";
+import TaskForm from "./TaskForm";
 
-function TaskDashboard() {
+function TaskDashboard({ token, onLogout }) {
   const [tasks, setTasks] = useState([]);
-  const [editingTask, setEditingTask] = useState(null);
-  const navigate = useNavigate();
-  const token = localStorage.getItem("jwt");
+  const [errorMsg, setErrorMsg] = useState("");
 
   useEffect(() => {
-    if (!token) {
-      navigate("/signin");
-      return;
+    const fetchTasks = async () => {
+      try {
+        const data = await getTasks(token);
+        setTasks(data);
+      } catch (err) {
+        setErrorMsg("Error al cargar las tareas");
+      }
+    };
+    fetchTasks();
+  }, [token]);
+
+  const handleCreateTask = async (newTask) => {
+    if (!newTask.trim()) return;
+    try {
+      const data = await createTask(token, { title: newTask });
+      setTasks((prev) => [...prev, data]);
+    } catch (err) {
+      setErrorMsg("Error al crear la tarea");
     }
-
-    fetch("/api/tasks", {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    })
-      .then(async (res) => {
-        if (!res.ok) {
-          const err = await res.text();
-          throw new Error(err || "Error al cargar tareas");
-        }
-        return res.json();
-      })
-      .then((data) => setTasks(data))
-      .catch((err) => toast.error(`Error al cargar tareas: ${err.message}`));
-  }, [navigate, token]);
-
-  const handleSubmitTask = (taskData) => {
-    const url = editingTask ? `/api/tasks/${editingTask._id}` : "/api/tasks";
-    const method = editingTask ? "PATCH" : "POST";
-
-    fetch(url, {
-      method,
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify(taskData),
-    })
-      .then(async (res) => {
-        if (!res.ok) throw new Error(await res.text());
-        return res.json();
-      })
-      .then((newTask) => {
-        if (editingTask) {
-          setTasks((prev) =>
-            prev.map((t) => (t._id === newTask._id ? newTask : t))
-          );
-          toast.success("Tarea actualizada con éxito");
-        } else {
-          setTasks((prev) => [...prev, newTask]);
-          toast.success("Tarea creada con éxito");
-        }
-        setEditingTask(null);
-      })
-      .catch((err) => toast.error(`Error: ${err.message}`));
   };
 
-  const handleDeleteTask = (taskId) => {
-    if (!window.confirm("¿Estás segura de que querés eliminar esta tarea?")) return;
-
-    fetch(`/api/tasks/${taskId}`, {
-      method: "DELETE",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    })
-      .then(async (res) => {
-        if (!res.ok) throw new Error(await res.text());
-        setTasks((prev) => prev.filter((t) => t._id !== taskId));
-        toast.success("Tarea eliminada");
-      })
-      .catch((err) => toast.error(`Error al eliminar tarea: ${err.message}`));
+  const handleToggleTask = async (task) => {
+    try {
+      const updatedTask = await updateTask(token, task._id, {
+        completed: !task.completed,
+      });
+      setTasks((prev) =>
+        prev.map((t) => (t._id === task._id ? updatedTask : t))
+      );
+    } catch (err) {
+      setErrorMsg("Error al actualizar la tarea");
+    }
   };
 
-  const handleEditTask = (task) => setEditingTask(task);
+  const handleDeleteTask = async (taskId) => {
+    if (!window.confirm("¿Seguro que quieres eliminar esta tarea?")) return;
+    try {
+      await deleteTask(token, taskId);
+      setTasks((prev) => prev.filter((t) => t._id !== taskId));
+    } catch (err) {
+      setErrorMsg("Error al eliminar la tarea");
+    }
+  };
 
   return (
-    <main className="max-w-2xl mx-auto mt-8 px-4">
-      <h1 className="text-2xl font-bold mb-4">Mis Tareas</h1>
-      <TaskForm onSubmit={handleSubmitTask} initialData={editingTask} />
-      <TaskList tasks={tasks} onEdit={handleEditTask} onDelete={handleDeleteTask} />
+    <main className="max-w-md mx-auto mt-10 p-6 bg-white rounded-lg shadow">
+      <h2 className="text-xl font-bold mb-4">Tus Tareas</h2>
+      {errorMsg && <p className="text-red-500">{errorMsg}</p>}
+
+      <TaskForm onCreate={handleCreateTask} />
+      <TaskList tasks={tasks} onToggle={handleToggleTask} onDelete={handleDeleteTask} />
+
+      <button
+        onClick={onLogout}
+        className="w-full mt-4 bg-red-600 text-white py-2 rounded hover:bg-red-700"
+      >
+        Cerrar sesión
+      </button>
     </main>
   );
 }
