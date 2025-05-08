@@ -1,7 +1,6 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
-// eslint-disable-next-line import/no-extraneous-dependencies
 const helmet = require('helmet');
 const morgan = require('morgan');
 const rateLimit = require('express-rate-limit');
@@ -13,9 +12,7 @@ const taskRoutes = require('./routes/tasks');
 const app = express();
 
 app.use(helmet());
-
 app.use(cors());
-
 app.use(express.json());
 app.use(morgan('dev'));
 
@@ -25,15 +22,23 @@ const limiter = rateLimit({
 });
 app.use(limiter);
 
-// Rutas
 app.use('/api', authRoutes);
 app.use('/api/tasks', taskRoutes);
 
 const PORT = process.env.PORT || 5000;
-mongoose.connect(process.env.MONGODB_URI)
+const mongoUri = process.env.MONGODB_URI;
+
+mongoose.connect(mongoUri, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+})
   .then(() => {
-    app.listen(PORT, () => {
-      console.log(`Servidor corriendo en el puerto ${PORT}`);
-    });
+    console.log('✅ Conectado a MongoDB Atlas');
   })
-  .catch((err) => console.error('Error al conectar a MongoDB:', err));
+  .catch((err) => {
+    console.error('❌ Error al conectar a MongoDB:', err.message);
+  });
+
+app.listen(PORT, () => {
+  console.log(`🚀 Server running on port ${PORT}`);
+});
