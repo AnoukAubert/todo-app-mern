@@ -13,12 +13,14 @@ function Login({ onLogin }) {
     e.preventDefault();
     try {
       const data = await login({ email, password });
+      localStorage.setItem("token", data.token);
       onLogin(data.token);
       navigate("/tasks");
     } catch (err) {
-      setErrorMsg(err.response?.data?.message || "Login fallido");
+      setErrorMsg(err.message || "Inicio de sesión fallido");
     }
   };
+  
 
   return (
     <main className="max-w-md mx-auto mt-10 p-6 bg-white rounded-lg shadow">

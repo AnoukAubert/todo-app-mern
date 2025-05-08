@@ -1,18 +1,22 @@
 const jwt = require('jsonwebtoken');
 
-module.exports = (req, res, next) => {
-  const authHeader = req.header('Authorization');
-  const token = authHeader ? authHeader.replace('Bearer ', '') : null;
+// eslint-disable-next-line consistent-return
+const authMiddleware = (req, res, next) => {
+  const authHeader = req.headers.authorization;
 
-  if (!token) {
-    return res.status(401).json({ error: 'Token requerido' });
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    return res.status(401).json({ message: 'Acceso denegado. No autorizado.' });
   }
+
+  const token = authHeader.split(' ')[1];
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     req.user = decoded;
     next();
-  } catch {
-    res.status(401).json({ error: 'Token inválido' });
+  } catch (err) {
+    res.status(401).json({ message: 'Token no válido.' });
   }
 };
+
+module.exports = authMiddleware;

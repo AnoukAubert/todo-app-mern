@@ -1,72 +1,66 @@
 import React, { useState, useEffect } from "react";
-import { getTasks, createTask, updateTask, deleteTask } from "./api";
-import TaskList from "./TaskList";
-import TaskForm from "./TaskForm";
+import { getTasks, createTask, deleteTask } from "./api";
 
-function TaskDashboard({ token, onLogout }) {
+function TaskDashboard({ token }) {
   const [tasks, setTasks] = useState([]);
-  const [errorMsg, setErrorMsg] = useState("");
+  const [taskText, setTaskText] = useState("");
 
   useEffect(() => {
     const fetchTasks = async () => {
       try {
-        const data = await getTasks(token);
-        setTasks(data);
+        const fetchedTasks = await getTasks(token);
+        setTasks(fetchedTasks);
       } catch (err) {
-        setErrorMsg("Error al cargar las tareas");
+        console.error("Error fetching tasks:", err);
       }
     };
+
     fetchTasks();
   }, [token]);
 
-  const handleCreateTask = async (newTask) => {
-    if (!newTask.trim()) return;
+  const handleCreateTask = async (e) => {
+    e.preventDefault();
+    if (!taskText.trim()) return;
+
     try {
-      const data = await createTask(token, { title: newTask });
-      setTasks((prev) => [...prev, data]);
+      const newTask = await createTask({ text: taskText }, token);
+      setTasks((prev) => [...prev, newTask]);
+      setTaskText("");
     } catch (err) {
-      setErrorMsg("Error al crear la tarea");
+      console.error("Error creating task:", err);
     }
   };
 
-  const handleToggleTask = async (task) => {
+  const handleDeleteTask = async (id) => {
     try {
-      const updatedTask = await updateTask(token, task._id, {
-        completed: !task.completed,
-      });
-      setTasks((prev) =>
-        prev.map((t) => (t._id === task._id ? updatedTask : t))
-      );
+      await deleteTask(id, token);
+      setTasks((prev) => prev.filter((task) => task._id !== id));
     } catch (err) {
-      setErrorMsg("Error al actualizar la tarea");
-    }
-  };
-
-  const handleDeleteTask = async (taskId) => {
-    if (!window.confirm("¿Seguro que quieres eliminar esta tarea?")) return;
-    try {
-      await deleteTask(token, taskId);
-      setTasks((prev) => prev.filter((t) => t._id !== taskId));
-    } catch (err) {
-      setErrorMsg("Error al eliminar la tarea");
+      console.error("Error deleting task:", err);
     }
   };
 
   return (
-    <main className="max-w-md mx-auto mt-10 p-6 bg-white rounded-lg shadow">
-      <h2 className="text-xl font-bold mb-4">Tus Tareas</h2>
-      {errorMsg && <p className="text-red-500">{errorMsg}</p>}
+    <div className="task-dashboard">
+      <form onSubmit={handleCreateTask}>
+        <input
+          type="text"
+          value={taskText}
+          onChange={(e) => setTaskText(e.target.value)}
+          placeholder="Nueva tarea..."
+        />
+        <button type="submit">Agregar tarea</button>
+      </form>
 
-      <TaskForm onCreate={handleCreateTask} />
-      <TaskList tasks={tasks} onToggle={handleToggleTask} onDelete={handleDeleteTask} />
-
-      <button
-        onClick={onLogout}
-        className="w-full mt-4 bg-red-600 text-white py-2 rounded hover:bg-red-700"
-      >
-        Cerrar sesión
-      </button>
-    </main>
+      <ul>
+        {tasks.map((task) => (
+          <li key={task._id}>
+            {task.text}
+            <button onClick={() => handleDeleteTask(task._id)}>Eliminar</button>
+          </li>
+        ))}
+      </ul>
+    </div>
   );
 }
 
