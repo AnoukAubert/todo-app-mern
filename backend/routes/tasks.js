@@ -2,16 +2,13 @@ const express = require('express');
 
 const router = express.Router();
 const {
-  getTasks, createTask, updateTask, deleteTask,
+  createTask, getTasks, updateTask, deleteTask,
 } = require('../controllers/taskController');
+const authMiddleware = require('../middleware/authMiddleware');
 
-// eslint-disable-next-line no-undef
 router.get('/', authMiddleware, getTasks);
-// eslint-disable-next-line no-undef
 router.post('/', authMiddleware, createTask);
-// eslint-disable-next-line no-undef
 router.put('/:id', authMiddleware, updateTask);
-// eslint-disable-next-line no-undef
 router.delete('/:id', authMiddleware, deleteTask);
 
 module.exports = router;
