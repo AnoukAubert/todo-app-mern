@@ -2,6 +2,8 @@
 
 Aplicación full stack MERN para la gestión de tareas con autenticación, validaciones, rate-limiting y animaciones.
 
+ACTUALIZACIÓN 12/05/2025: Se mejoró la funcionalidad de Agregar y Eiminar las tareas, traer las mismas desde la api. Se agregaron animaciónes con Framer Motion y notificaciones con React Toastify.
+Si estás leyendo esto pido disculpas por seguir trabajando en el proyecto después de la fecha límite, realmente no soporto dejar proyectos a medio camino. Gracias por la oportunidad.
 ---
 
 ## 🌐 Enlaces
